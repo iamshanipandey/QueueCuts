@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const chairSchema = new mongoose.Schema({
-    name : {
-        type : String,
-        required : true,
-    },
     server : {
         type : String,
         required : true,
@@ -25,12 +21,12 @@ const chairSchema = new mongoose.Schema({
     }],
     currentCustomer : {
         type : String,
-        required : true,
     },
     status : {
         type : String,
+        enum : ["Online", "Offline"],
         required : true,
     }
 })
 
-module.exports = mongoose.Schema("Chair", chairSchema);
+module.exports = mongoose.model("Chair", chairSchema);

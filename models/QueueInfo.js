@@ -26,4 +26,4 @@ const queueInfoSchema = new mongoose.Schema({
     },
 })
 
-module.exports = mongoose.Schema("QueueInfo", queueInfoSchema);
+module.exports = mongoose.model("QueueInfo", queueInfoSchema);

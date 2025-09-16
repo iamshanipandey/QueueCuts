@@ -12,4 +12,4 @@ const serviceCompletedSchema = new mongoose.Schema({
         },
 })
 
-module.exports = mongoose.Schema("ServiceCompleted", serviceCompletedSchema);
+module.exports = mongoose.model("ServiceCompleted", serviceCompletedSchema);

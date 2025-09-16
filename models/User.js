@@ -1,32 +1,31 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-    name : {
-        type: String,
-        require: true,
-        trim: true,
-    },
     userType : {
         type : String,
         enum : ["Shop","Customer","Admin"],
         require: true,
     },
+    countryCode : {
+        type : Number,
+        required : true,
+    },
+    phoneNumber : {
+        type : Number,
+        required: true,
+    },
     additionalDetails : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "Profile",
-        required : true,
-    },
-    profilePicture : {
-        type : String,
-        required : true,
     },
     totalServiceTaken : [{
         type : mongoose.Schema.Types.ObjectId,
-        ref : "CompletedServices",
+        ref : "ServiceCompleted",
     }],
-    password: {
-        type : String,
-    },
+    shop : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Shop",
+    }
 })
 
 module.exports = mongoose.model("User", userSchema)

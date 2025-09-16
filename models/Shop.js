@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 
 const shopSchema = new mongoose.Schema({
-    name : {
+    shopName : {
         type : String,
         required: true,
     },
@@ -11,8 +11,12 @@ const shopSchema = new mongoose.Schema({
         ref : "User",
         required : true,
     },
-    location : {
-        type : String,
+    locationLatitude : {
+        type : Number,
+        required: true,
+    },
+    locationLongitude : {
+        type : Number,
         required: true,
     },
     openingTime : {
@@ -35,11 +39,10 @@ const shopSchema = new mongoose.Schema({
     ratingAndReview : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : "RatingAndReview",
-        required: true,
     }],
     status : {
         type : String,
-        ref : ["Online", "Offline"],
+        enum : ["Online", "Offline"],
         required: true,
     },
 })
