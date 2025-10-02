@@ -14,6 +14,19 @@ const serviceSchema = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : "RatingAndReview",
     }],
+    averageRating : {
+        type : Number,
+        max : 5,
+        min : 1,
+    },
+    ratingCount : {
+        type : Number,
+        default: 0,
+    },
+    shop : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Shop",
+    }
 
 })
 

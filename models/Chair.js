@@ -11,7 +11,7 @@ const chairSchema = new mongoose.Schema({
     },
     services : [{
         type : mongoose.Schema.Types.ObjectId,
-        ref : "Services",
+        ref : "Service",
         required : true,
     }],
     currentWaiting : [{
@@ -20,7 +20,8 @@ const chairSchema = new mongoose.Schema({
         required : true,
     }],
     currentCustomer : {
-        type : String,
+        type : mongoose.Schema.Types.ObjectId,
+        ref: "QueueInfo",
     },
     status : {
         type : String,

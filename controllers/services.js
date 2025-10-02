@@ -1,14 +1,16 @@
 const Chair = require("../models/Chair");
 const Service = require("../models/Service");
+const Shop = require("../models/Shop");
+const User = require("../models/User")
 
 //Create Service
 exports.createService = async(req, res) => {
     try
     {
-        const {name, price, chair, expectedTime } = req.body;
+        const {name, price, chair, expectedTime, shopId } = req.body;
         const {userId} = req.user;
 
-        if(!userId || !price || !name || !chair || !expectedTime) 
+        if(!userId || !price || !name || !chair || !expectedTime || !shopId ) 
         {
             return res.status(401).json({
                 success: false,
@@ -16,11 +18,14 @@ exports.createService = async(req, res) => {
             })
         }
 
+        const user = await User.findById(userId);
+
         const newService = await Service.create({
             name : name,
             price : price,
             expectedTime : expectedTime,
             ratingAndReview :  null,
+            shop : shopId,
         })
         
         if(!newService)
@@ -40,8 +45,24 @@ exports.createService = async(req, res) => {
                 message: "Unbale to fetch chair details",
             })
         }
+
+        // push service in chair
         fetchChair.services.push(newService._id);
         await fetchChair.save();
+
+        //push service in shop and shop in service
+        const shop = await Shop.findById(shopId);
+        if(!shop)
+        {
+            return res.status(401).json({
+                success: false,
+                message : "Shop details not found",
+            })
+        }
+
+        shop.services.push(newService._id);
+        await shop.save();
+        
 
         return res.status(200).json({
             success: true,

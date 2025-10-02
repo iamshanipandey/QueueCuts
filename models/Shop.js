@@ -32,14 +32,30 @@ const shopSchema = new mongoose.Schema({
         ref : "Chair",
         required: true,
     }],
+    services : [{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Service",
+    }],
     shopAge : {
         type : Number,
         required : true,
+    },
+    image :{
+        type: String,
     },
     ratingAndReview : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : "RatingAndReview",
     }],
+    averageRating : {
+        type : Number,
+        max : 5,
+        min : 1,
+    },
+    ratingCount : {
+        type : Number,
+        default: 0,
+    },
     status : {
         type : String,
         enum : ["Online", "Offline"],

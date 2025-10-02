@@ -81,7 +81,8 @@ exports.updateChair = async(req, res) =>{
         const {
             chairId,
             server,
-            experience
+            experience,
+            status,
         } = req.body;
 
         const {userId} = req.user;
@@ -107,6 +108,7 @@ exports.updateChair = async(req, res) =>{
 
         chair.server = server;
         chair.experience = experience;
+        chair.status = status;
         await chair.save();
         
         
@@ -118,7 +120,7 @@ exports.updateChair = async(req, res) =>{
 
         return res.status(200).json({
             success: true,
-            message: "Chair Added Successfully",
+            message: "Chair updated Successfully",
             chair, populatedShop
         })
     }

@@ -2,6 +2,7 @@ const Shop = require("../models/Shop");
 const Chair = require("../models/Chair");
 const User = require("../models/User");
 const Profile = require("../models/Profile");
+const { imageUploader } = require("../config/imageUploader");
 
 // Create new Shop
 exports.createShop = async(req, res)=>{
@@ -9,7 +10,7 @@ exports.createShop = async(req, res)=>{
     {
         const {firstName, lastName, email, gender, shopName, locationLatitude, locationLongitude, openingTime, closingTime, shopAge} = req.body;
         const {userId} = req.user;
-
+        const image = req.files.image;
         if(!userId || !firstName || !lastName || !gender || !shopName || !locationLatitude || !locationLongitude || !openingTime || !closingTime || !shopAge)
         {
             return res.status(401).json({
@@ -27,6 +28,7 @@ exports.createShop = async(req, res)=>{
                 shop,
             })
         }
+        const uploadImage = await imageUploader(image, process.env.FOLDER_NAME);
         const newShop = await Shop.create({
             shopName : shopName,
             owner : userId,
@@ -35,7 +37,9 @@ exports.createShop = async(req, res)=>{
             openingTime : openingTime,
             closingTime : closingTime,
             chairs : [],
+            services: [],
             shopAge : shopAge,
+            image : uploadImage.secure_url,
             status : "Offline"
         })
 
@@ -102,7 +106,7 @@ exports.updateShop = async(req, res) =>{
     {
         const {shopId,firstName, lastName, email, gender, shopName, locationLatitude, locationLongitude, openingTime, closingTime, shopAge} = req.body;
         const {userId} = req.user;
-
+        const image = req?.files?.image;
         if(!userId || !firstName || !lastName || !gender  || !shopId || !shopName || !locationLatitude || !locationLongitude || !openingTime || !closingTime || !shopAge)
         {
             return res.status(401).json({
@@ -119,15 +123,29 @@ exports.updateShop = async(req, res) =>{
                 message: "Invalid Shop",
             })
         }
-
-        shop.shopName = shopName;
-        shop.locationLatitude = locationLatitude;
-        shop.locationLongitude = locationLongitude;
-        shop.openingTime = openingTime;
-        shop.closingTime = closingTime;
-        shop.shopAge = shopAge;
-        await shop.save();
-
+    
+        if(image)
+        {
+            const uploadImage = await imageUploader(image, process.env.FOLDER_NAME);
+            shop.shopName = shopName;
+            shop.locationLatitude = locationLatitude;
+            shop.locationLongitude = locationLongitude;
+            shop.openingTime = openingTime;
+            shop.closingTime = closingTime;
+            shop.shopAge = shopAge;
+            shop.image = uploadImage.secure_url;
+            await shop.save();
+        }
+        else
+        {
+            shop.shopName = shopName;
+            shop.locationLatitude = locationLatitude;
+            shop.locationLongitude = locationLongitude;
+            shop.openingTime = openingTime;
+            shop.closingTime = closingTime;
+            shop.shopAge = shopAge;
+            await shop.save();
+        }
         // get user
         const user = await User.findById(userId);
 
@@ -164,6 +182,7 @@ exports.updateShop = async(req, res) =>{
     }
     catch(error)
     {
+        console.log(error.message);
         return res.status(500).json({
             success: false,
             message: "Server Error, Try Again.",

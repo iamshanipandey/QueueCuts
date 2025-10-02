@@ -4,7 +4,9 @@ const jwt = require("jsonwebtoken")
 exports.authentication = async(req, res, next) =>{
     try
     {
-        const {token} = req.body;
+        
+        const token = req.body.token || req.cookies.token || 
+                      req.header("autherization").replace("Bearer ","");
 
         if(!token)
         {
@@ -18,7 +20,7 @@ exports.authentication = async(req, res, next) =>{
 
         try
         {
-            const decode = jwt.decode(token, process.env.JBT_SECRET)
+            const decode = jwt.verify(token, process.env.JWT_SECRET)
             req.user = decode;
             console.log(req.user);
 
@@ -98,7 +100,6 @@ exports.isShop = async(req, res, next) =>{
                 message: "This is protected route, only for Shop",
             })
         }
-
         next();
     }
     catch(error)

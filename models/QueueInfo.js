@@ -8,6 +8,11 @@ const queueInfoSchema = new mongoose.Schema({
     },
     joinedAt : {
         type : Date,
+        default : Date.now(),
+        required : true,
+    },
+    token : {
+        type : Number,
         required : true,
     },
     status : {

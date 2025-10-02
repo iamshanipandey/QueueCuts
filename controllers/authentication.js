@@ -132,7 +132,7 @@ exports.loginOrSignup = async(req, res) =>{
 
 
         //JBT Token generate
-        const token = jwt.sign(payload, process.env.JBT_SECRET, {
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {
             expiresIn: "24h",
         })
 
